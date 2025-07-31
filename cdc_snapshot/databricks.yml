@@ -26,6 +26,10 @@ resources:
       libraries:
         - file:
             path: ./src/bronze_person.sql
+        - file:
+            path: ./src/person_snapshot_view.sql
+        - file:
+            path: ./src/process_snapshot.py
 
 workspace:
   profile: DEFAULT
