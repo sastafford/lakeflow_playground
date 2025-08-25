@@ -24,4 +24,8 @@ Run the [demo](./demo.ipynb) notebook.
 ```
 databricks bundle destroy --var="catalog=main"
 ```
+## Troubleshooting
 
+```
+databricks bundle sync --full 
+```
