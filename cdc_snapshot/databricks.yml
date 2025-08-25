@@ -31,5 +31,9 @@ resources:
         - file:
             path: ./src/process_snapshot.py
 
+targets:
+  cdc_snapshot_target:
+    default: true
+
 workspace:
-  profile: DEFAULT
+  profile: fe
