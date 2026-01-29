@@ -12,9 +12,8 @@ resources:
       name: "Hello SQL Job"
       tasks:
         - task_key: run_hello_sql
-          sql_task:
-            file:
-              path: ./src/Hello.sql
+          notebook_task:
+            notebook_path: ./src/hello_world.ipynb
           new_cluster:
             num_workers: 0  # Single node cluster
             spark_version: 15.4.x-scala2.12  # Latest LTS
