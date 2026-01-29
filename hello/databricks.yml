@@ -1,0 +1,46 @@
+# Databricks Asset Bundle configuration, more info here: https://docs.databricks.com/en/dev-tools/bundles/settings.html
+bundle:
+  name: "hello"
+
+include:
+  - resources/*.yml
+  - resources/*/*.yml
+
+resources:
+  jobs:
+    hello_sql_job:
+      name: "Hello SQL Job"
+      tasks:
+        - task_key: run_hello_sql
+          sql_task:
+            file:
+              path: ./src/Hello.sql
+          new_cluster:
+            num_workers: 0  # Single node cluster
+            spark_version: 15.4.x-scala2.12  # Latest LTS
+            node_type_id: i4i.xlarge
+            spark_conf:
+              "spark.databricks.cluster.profile": "singleNode"
+              "spark.master": "local[*]"
+            custom_tags:
+              ResourceClass: "SingleNode"
+
+targets:
+  # The 'dev' target, for development purposes. This target is the default.
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://fe-vm-stafford-1-classic.cloud.databricks.com
+
+  # The 'prod' target, used for production deployment.
+  prod:
+    mode: production
+    workspace:
+      host: https://fe-vm-stafford-1-classic.cloud.databricks.com
+      # We always use /Users/scott.stafford@databricks.com for all resources to make sure we only have a single copy.
+      root_path: /Users/scott.stafford@databricks.com/.bundle/${bundle.name}/${bundle.target}
+    run_as:
+      # This runs as scott.stafford@databricks.com in production. We could also use a service principal here,
+      # see https://docs.databricks.com/dev-tools/bundles/permissions.html.
+      user_name: scott.stafford@databricks.com
