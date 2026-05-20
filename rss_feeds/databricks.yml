@@ -1,0 +1,27 @@
+# Declarative Automation Bundle configuration, more info here: https://docs.databricks.com/en/dev-tools/bundles/settings.html
+
+bundle:
+  name: "rss_feeds"
+
+include:
+  - resources/*.yml
+  - resources/*/*.yml
+
+variables:
+  warehouse_id:
+    description: "The SQL warehouse ID used for SQL tasks"
+    default: "492d1c843b4cc40a"
+
+targets:
+  # The 'dev' target, for development purposes. This target is the default.
+  dev:
+    mode: development
+    default: true
+    workspace:
+      profile: DEFAULT
+
+  # The 'prod' target, used for production deployment.
+  prod:
+    mode: production
+    workspace:
+      profile: DEFAULT
