@@ -4,7 +4,7 @@ resources:
       name: Ingest and Enhance RSS Feeds
       parameters:
         - name: rss_feeds
-          default: ""
+          default: "https://www.nibib.nih.gov/rss"
       tasks:
         - task_key: Download_RSS_Feeds
           disabled: false
