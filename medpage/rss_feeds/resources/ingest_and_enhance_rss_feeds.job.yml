@@ -1,0 +1,61 @@
+resources:
+  jobs:
+    ingest_and_enhance_rss_feeds:
+      name: Ingest and Enhance RSS Feeds
+      tasks:
+        - task_key: Download_RSS_Medpage_Feeds
+          disabled: false
+          email_notifications: {}
+          environment_key: Default
+          notebook_task:
+            notebook_path: ../src/ingest_and_enhance_rss_feeds/medpage_rss_downloader.ipynb
+            source: WORKSPACE
+          run_if: ALL_SUCCESS
+          timeout_seconds: 0
+          webhook_notifications: {}
+        - task_key: Convert_RSS_XML_to_Bronze
+          depends_on:
+            - task_key: Download_RSS_Medpage_Feeds
+          disabled: false
+          email_notifications: {}
+          notebook_task:
+            notebook_path: ../src/ingest_and_enhance_rss_feeds/rss_xml_to_bronze.ipynb
+            source: WORKSPACE
+          run_if: ALL_SUCCESS
+          timeout_seconds: 0
+          webhook_notifications: {}
+        - task_key: Retrieve_RSS_Content
+          depends_on:
+            - task_key: Convert_RSS_XML_to_Bronze
+          disabled: false
+          email_notifications: {}
+          notebook_task:
+            notebook_path: ../src/ingest_and_enhance_rss_feeds/extract_rss_content.ipynb
+            source: WORKSPACE
+          run_if: ALL_SUCCESS
+          timeout_seconds: 0
+          webhook_notifications: {}
+        - task_key: Extract_Entities
+          depends_on:
+            - task_key: Retrieve_RSS_Content
+          disabled: false
+          email_notifications: {}
+          run_if: ALL_SUCCESS
+          sql_task:
+            file:
+              path: ../src/ingest_and_enhance_rss_feeds/extract_entities.sql
+              source: WORKSPACE
+            warehouse_id: 492d1c843b4cc40a
+          timeout_seconds: 0
+      email_notifications:
+        no_alert_for_skipped_runs: false
+      environments:
+        - environment_key: Default
+          spec:
+            environment_version: "5"
+      max_concurrent_runs: 1
+      performance_target: PERFORMANCE_OPTIMIZED
+      queue:
+        enabled: true
+      timeout_seconds: 0
+      webhook_notifications: {}
